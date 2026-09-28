@@ -1,4 +1,7 @@
 venv/
+.ci-venv/
 __pycache__/
 *.pyc
 .env
+actions-runner/
+

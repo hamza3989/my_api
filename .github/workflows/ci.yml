@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: CI - Validate API
+    runs-on: [self-hosted, linux, x64]
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Show runner information
+        run: |
+          echo "Runner: $RUNNER_NAME"
+          echo "OS: $RUNNER_OS"
+          echo "Architecture: $RUNNER_ARCH"
+          echo "USER: $(whoami)"
+          echo "HOstname: $(hostname)"
+
+      - name: Check Python 
+        run: |
+          python3 --version
+
+      - name: Check Git
+        run: |
+          git --version
+
+      - name: Validate requirements 
+        run: |
+          test -f requirements.txt
+          echo "requirements.txt found"
+
+      - name: Install dependencies
+        run: |
+          python3 -m venv .ci-venv
+          . .ci-venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Python syntax check
+        run: |
+          . .ci-venv/bin/activate
+          python -m py_compile api.py
+
+      - name: Check required application files
+        run: |
+          test -f api.py
+          test -f requirements.txt
+          echo "Application files validated"
+
+      - name: CI Completed 
+        run: |
+          echo "CI validation passed successfully"

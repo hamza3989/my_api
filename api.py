@@ -45,6 +45,10 @@ class APIHandler(BaseHTTPRequestHandler):
 
         path = urlparse(self.path).path
 
+        if path == "/health":
+            self.send_json(200, {"status": "ok"})
+            return
+
         connection = None
         cursor = None
 
