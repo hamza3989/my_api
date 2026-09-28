@@ -365,3 +365,4 @@ server = HTTPServer(
 print(f"API running on {HOST}:{PORT}")
 
 server.serve_forever()
+# CI test
